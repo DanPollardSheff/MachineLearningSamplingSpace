@@ -32,7 +32,7 @@ number_TEs <- sum(ifelse((A1c %in% data[row,"ML_Example_HbA1c"])==T,1,0))
 if(number_TEs != data[row,"ML_Example_EffectDuration"]){
   stop("the modelled treatment effect duration does not match the number of years the treatment effect is applied for in the model")
 }
-rm(A1c)
+rm(A1c,number_TEs)
 }
 
 ##BMI
@@ -50,7 +50,7 @@ for(row in 1:length(data[,"ML_Example_BMI"])){
   if(number_TEs != data[row,"ML_Example_EffectDuration"]){
     stop("the modelled treatment effect duration does not match the number of years the treatment effect is applied for in the model")
   }
-  rm(BMI)
+  rm(BMI,number_TEs)
 }
 
 ##SBP
@@ -67,7 +67,40 @@ for(row in 1:length(data[,"ML_Example_SBP"])){
   if(number_TEs != data[row,"ML_Example_EffectDuration"]){
     stop("the modelled treatment effect duration does not match the number of years the treatment effect is applied for in the model")
   }
-  rm(SBP)
+  rm(SBP,number_TEs)
 }
 
 ##HDL 
+for(row in 1:length(data[,"ML_Example_SBP"])){
+  HDL <- initialise_intervention_dt_HDL(1,
+                                        "MLexample",
+                                        data[row,],
+                                        max(data[,"ML_Example_EffectDuration"]),
+                                        GlobalVars)
+  
+  
+  ##count the treatment effects and make sure that there are as many as the treatment effect duration
+  number_TEs <- sum(HDL[2:length(HDL)]) #we don't want the first column as this is an ID column
+  
+  if(number_TEs != 0){
+    stop("the modelled treatment effect duration does not match the number of years the treatment effect is applied for in the model")
+  }
+  rm(HDL,number_TEs)
+}
+
+##LDL
+for(row in 1:length(data[,"ML_Example_SBP"])){
+  LDL <- initialise_intervention_dt_LDL(1,
+                                        "MLexample",
+                                        data[row,],
+                                        max(data[,"ML_Example_EffectDuration"]),
+                                        GlobalVars)
+  
+  
+  ##count the treatment effects and make sure that there are as many as the treatment effect duration
+  number_TEs <- sum(ifelse((LDL %in% data[row,"ML_Example_LDL"])==T,1,0))
+  if(number_TEs != data[row,"ML_Example_EffectDuration"]){
+    stop("the modelled treatment effect duration does not match the number of years the treatment effect is applied for in the model")
+  }
+  rm(LDL,number_TEs)
+}
