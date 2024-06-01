@@ -53,10 +53,6 @@ initialise_intervention_dt_HbA1c <- function(n_,
 ##'@param parameter_ is the row of the parameter matrix
 ##'@param endtime_ is a number indicating how many years the simulation is being run for
 ##'@param GlobalVars_
-##'@param attend_se_ is three column matrix. Column 1 is patient ID, column 2 is 
-##'a 0,1 vector with 1 indicating attendance at an SE course in the first model year,
-##'column 3 is a 0,1 vector with 1 indicating attendance at an SE course in the second
-##'model year 
 ##'@return INTE_BMI is a matrix that gives the reduction in BMI for each patient 
 ##'in each year
 
@@ -64,177 +60,13 @@ initialise_intervention_dt_BMI <- function(n_,
                                            treatment_, 
                                            parameter_,
                                            endtime_,
-                                           GlobalVars_, 
-                                           attend_se_) {
+                                           GlobalVars_) {
   INTE_BMI <- matrix(data=0, nrow = n_, ncol =endtime_+2)
   INTE_BMI[,1] <- 1:n_ #make the first column equivalent to the patient ID for matching later on
   if(treatment_ == "test"|treatment_ == "Mt_HOOD_2018_QOL_BMI"){
     INTE_BMI[,2:(endtime_+2)] <- -1
-  }else if (treatment_ == "Embedding_TrialEffect_All"){
-    INTE_BMI[,2] <- parameter_[,"Intv_Embedding_BMI"]
-    
-    ####Duration scenarios
-    if(as.numeric(GlobalVars_["Treatment effect duration", "Value"])==3){#effects last until year 3
-      INTE_BMI[,3:4]  <- parameter_[,"Intv_Embedding_BMI"]
-    }else if (as.numeric(GlobalVars_["Treatment effect duration", "Value"])==5){#effects last until year 5
-      INTE_BMI[,3:6]  <- parameter_[,"Intv_Embedding_BMI"]
-    }else{#effects last 10 years
-      INTE_BMI[,3:11]  <- parameter_[,"Intv_Embedding_BMI"] 
-    }
-  } else if (treatment_ == "Embedding_TrialEffect_All_1yr"){
-    INTE_BMI[,2] <- parameter_[,"Intv_Embedding_BMI"]
-    
-    ####Duration scenarios
-    if(as.numeric(GlobalVars_["Treatment effect duration", "Value"])==10){#effects last until year 10
-      INTE_BMI[,3:11]  <- parameter_[,"Intv_Embedding_BMI"]
-    } else if (as.numeric(GlobalVars_["Treatment effect duration", "Value"])==5){#effects last until year 5
-      INTE_BMI[,3:6]  <- parameter_[,"Intv_Embedding_BMI"]
-    }else{#effects last 3 years
-      INTE_BMI[,3:4]  <- parameter_[,"Intv_Embedding_BMI"] 
-    }
-    
-  }else if (treatment_ == "Embedding_MetaAnalysis_All" | 
-            treatment_ == "Control_MetaAnalysis_all" |
-            treatment_ == "Embedding_MetaAnalysis_1yr"){
-    
-    ####Duration scenarios
-    if(as.numeric(GlobalVars_["Treatment effect duration", "Value"])==101){
-      #Lifetime Effect
-      INTE_BMI[,2:(endtime_+2)]  <- ifelse(attend_se_[,2]==1,
-                                 parameter_[,"Intv_MA_BMI"],
-                                 0) 
-      INTE_BMI[,3:(endtime_+2)]  <- ifelse(attend_se_[,3]==1,
-                                 parameter_[,"Intv_MA_BMI"],
-                                 INTE_BMI[,3:(endtime_+2)]) 
-      
-    } else if (as.numeric(GlobalVars_["Treatment effect duration", "Value"])==15){
-      #10 years of full effect followed by 5 year waning
-      #Create a matrix to store the effects
-      BMI <- matrix(data=0, nrow = 1, ncol = 15)
-      #Trajectory for people who se in year 1
-      BMI[1:10]  <- parameter_[,"Intv_MA_BMI"]
-      
-      BMI[11] <- parameter_[,"Intv_MA_BMI"] - (1*parameter_[,"Intv_MA_BMI"]/5)
-      
-      BMI[12] <- parameter_[,"Intv_MA_BMI"] - (2*parameter_[,"Intv_MA_BMI"]/5)
-      
-      BMI[13] <- parameter_[,"Intv_MA_BMI"] - (3*parameter_[,"Intv_MA_BMI"]/5)
-      
-      BMI[14] <- parameter_[,"Intv_MA_BMI"] - (4*parameter_[,"Intv_MA_BMI"]/5)
-      
-      #Year 1 effect for people who went to an SME course in year 1
-      INTE_BMI[,2] <- ifelse(attend_se_[,2]==1, BMI[1],0)
-      #Year 2 effect for people who went to an SME course in year 1
-      #Year 1 effect for people who went to an SME course in year 2
-      INTE_BMI[,3] <- ifelse(attend_se_[,2]==1, BMI[2],0)
-      INTE_BMI[,3] <- ifelse(attend_se_[,3]==1, BMI[1],INTE_BMI[,3])
-      #Year 3 effect for people who went to an SME course in year 1
-      #Year 2 effect for people who went to an SME course in year 2
-      INTE_BMI[,4] <- ifelse(attend_se_[,2]==1, BMI[3],0)
-      INTE_BMI[,4] <- ifelse(attend_se_[,3]==1, BMI[2],INTE_BMI[,4])
-      #Year 4 effect for people who went to an SME course in year 1
-      #Year 3 effect for people who went to an SME course in year 2
-      INTE_BMI[,5] <- ifelse(attend_se_[,2]==1, BMI[4],0)
-      INTE_BMI[,5] <- ifelse(attend_se_[,3]==1, BMI[3],INTE_BMI[,5])
-      #Year 5 effect for people who went to an SME course in year 1
-      #Year 4 effect for people who went to an SME course in year 2
-      INTE_BMI[,6] <- ifelse(attend_se_[,2]==1, BMI[5],0)
-      INTE_BMI[,6] <- ifelse(attend_se_[,3]==1, BMI[4],INTE_BMI[,6])
-      #Year 6 effect for people who went to an SME course in year 1
-      #Year 5 effect for people who went to an SME course in year 2
-      INTE_BMI[,7] <- ifelse(attend_se_[,2]==1, BMI[6],0)
-      INTE_BMI[,7] <- ifelse(attend_se_[,3]==1, BMI[5],INTE_BMI[,7])
-      #Year 7 effect for people who went to an SME course in year 1
-      #Year 6 effect for people who went to an SME course in year 2
-      INTE_BMI[,8] <- ifelse(attend_se_[,2]==1, BMI[7],0)
-      INTE_BMI[,8] <- ifelse(attend_se_[,3]==1, BMI[6],INTE_BMI[,8])
-      #Year 8 effect for people who went to an SME course in year 1
-      #Year 7 effect for people who went to an SME course in year 2
-      INTE_BMI[,9] <- ifelse(attend_se_[,2]==1, BMI[8],0)
-      INTE_BMI[,9] <- ifelse(attend_se_[,3]==1, BMI[7],INTE_BMI[,9])
-      #Year 9 effect for people who went to an SME course in year 1
-      #Year 8 effect for people who went to an SME course in year 2
-      INTE_BMI[,10] <- ifelse(attend_se_[,2]==1, BMI[9],0)
-      INTE_BMI[,10] <- ifelse(attend_se_[,3]==1, BMI[8],INTE_BMI[,10])
-      #Year 10 effect for people who went to an SME course in year 1
-      #Year 9 effect for people who went to an SME course in year 2
-      INTE_BMI[,11] <- ifelse(attend_se_[,2]==1, BMI[10],0)
-      INTE_BMI[,11] <- ifelse(attend_se_[,3]==1, BMI[9],INTE_BMI[,11])
-      #Year 11 effect for people who went to an SME course in year 1
-      #Year 10 effect for people who went to an SME course in year 2
-      INTE_BMI[,12] <- ifelse(attend_se_[,2]==1, BMI[11],0)
-      INTE_BMI[,12] <- ifelse(attend_se_[,3]==1, BMI[10],INTE_BMI[,12])
-      #Year 12 effect for people who went to an SME course in year 1
-      #Year 11 effect for people who went to an SME course in year 2
-      INTE_BMI[,13] <- ifelse(attend_se_[,2]==1, BMI[12],0)
-      INTE_BMI[,13] <- ifelse(attend_se_[,3]==1, BMI[11],INTE_BMI[,13])
-      #Year 13 effect for people who went to an SME course in year 1
-      #Year 12 effect for people who went to an SME course in year 2
-      INTE_BMI[,14] <- ifelse(attend_se_[,2]==1, BMI[13],0)
-      INTE_BMI[,14] <- ifelse(attend_se_[,3]==1, BMI[12],INTE_BMI[,14])
-      #Year 14 effect for people who went to an SME course in year 1
-      #Year 13 effect for people who went to an SME course in year 2
-      INTE_BMI[,15] <- ifelse(attend_se_[,2]==1, BMI[14],0)
-      INTE_BMI[,15] <- ifelse(attend_se_[,3]==1, BMI[13],INTE_BMI[,15])
-      #Year 15 effect for people who went to an SME course in year 1
-      #Year 14 effect for people who went to an SME course in year 2
-      INTE_BMI[,16] <- ifelse(attend_se_[,2]==1, BMI[15],0)
-      INTE_BMI[,16] <- ifelse(attend_se_[,3]==1, BMI[14],INTE_BMI[,16])
-      #Year 14 effect for people who went to an SME course in year 2
-      INTE_BMI[,17] <- ifelse(attend_se_[,3]==1, BMI[15],INTE_BMI[,17])
-    }else{
-      #Create a matrix to store the effects
-      BMI <- matrix(data=0, nrow = 1, ncol = 10)
-      #Trajectory for people who se in year 1
-      BMI[1:6]  <- parameter_[,"Intv_MA_BMI"]
-      
-      BMI[7] <-parameter_[,"Intv_MA_BMI"] - (1*parameter_[,"Intv_MA_BMI"]/4)
-      
-      BMI[8] <-parameter_[,"Intv_MA_BMI"] - (2*parameter_[,"Intv_MA_BMI"]/4)
-      
-      BMI[9] <-parameter_[,"Intv_MA_BMI"] - (3*parameter_[,"Intv_MA_BMI"]/4)
-      
-      #Year 1 effect for people who went to an SME course in year 1
-      INTE_BMI[,2] <- ifelse(attend_se_[,2]==1, BMI[1],0)
-      #Year 2 effect for people who went to an SME course in year 1
-      #Year 1 effect for people who went to an SME course in year 2
-      INTE_BMI[,3] <- ifelse(attend_se_[,2]==1, BMI[2],0)
-      INTE_BMI[,3] <- ifelse(attend_se_[,3]==1, BMI[1],INTE_BMI[,3])
-      #Year 3 effect for people who went to an SME course in year 1
-      #Year 2 effect for people who went to an SME course in year 2
-      INTE_BMI[,4] <- ifelse(attend_se_[,2]==1, BMI[3],0)
-      INTE_BMI[,4] <- ifelse(attend_se_[,3]==1, BMI[2],INTE_BMI[,4])
-      #Year 4 effect for people who went to an SME course in year 1
-      #Year 3 effect for people who went to an SME course in year 2
-      INTE_BMI[,5] <- ifelse(attend_se_[,2]==1, BMI[4],0)
-      INTE_BMI[,5] <- ifelse(attend_se_[,3]==1, BMI[3],INTE_BMI[,5])
-      #Year 5 effect for people who went to an SME course in year 1
-      #Year 4 effect for people who went to an SME course in year 2
-      INTE_BMI[,6] <- ifelse(attend_se_[,2]==1, BMI[5],0)
-      INTE_BMI[,6] <- ifelse(attend_se_[,3]==1, BMI[4],INTE_BMI[,6])
-      #Year 6 effect for people who went to an SME course in year 1
-      #Year 5 effect for people who went to an SME course in year 2
-      INTE_BMI[,7] <- ifelse(attend_se_[,2]==1, BMI[6],0)
-      INTE_BMI[,7] <- ifelse(attend_se_[,3]==1, BMI[5],INTE_BMI[,7])
-      #Year 7 effect for people who went to an SME course in year 1
-      #Year 6 effect for people who went to an SME course in year 2
-      INTE_BMI[,8] <- ifelse(attend_se_[,2]==1, BMI[7],0)
-      INTE_BMI[,8] <- ifelse(attend_se_[,3]==1, BMI[6],INTE_BMI[,8])
-      #Year 8 effect for people who went to an SME course in year 1
-      #Year 7 effect for people who went to an SME course in year 2
-      INTE_BMI[,9] <- ifelse(attend_se_[,2]==1, BMI[8],0)
-      INTE_BMI[,9] <- ifelse(attend_se_[,3]==1, BMI[7],INTE_BMI[,9])
-      #Year 9 effect for people who went to an SME course in year 1
-      #Year 8 effect for people who went to an SME course in year 2
-      INTE_BMI[,10] <- ifelse(attend_se_[,2]==1, BMI[9],0)
-      INTE_BMI[,10] <- ifelse(attend_se_[,3]==1, BMI[8],INTE_BMI[,10])
-      #Year 10 effect for people who went to an SME course in year 1
-      #Year 9 effect for people who went to an SME course in year 2
-      INTE_BMI[,11] <- ifelse(attend_se_[,2]==1, BMI[10],0)
-      INTE_BMI[,11] <- ifelse(attend_se_[,3]==1, BMI[9],INTE_BMI[,11])
-      #Year 10 effect for people who went to an SME course in year 2
-      INTE_BMI[,12] <- ifelse(attend_se_[,3]==1, BMI[10],0)
-    }
+  }else if(treatment_ == "MLexample"){
+    INTE_BMI[2:(parameter_[,"ML_Example_EffectDuration"]+1)] <- parameter_[,"ML_Example_BMI"]
   }
   
   

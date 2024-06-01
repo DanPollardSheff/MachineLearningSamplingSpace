@@ -20,11 +20,10 @@ source("all_model_files.R")
 
 ##Loop over all PSA parameters and the deterministic model run
 for(row in 1:length(data[,"ML_Example_HbA1c"])){
-row <- 1 #1=deterministic
 A1c <- initialise_intervention_dt_HbA1c(1,
                                         "MLexample",
                                         data[row,],
-                                        20,
+                                        max(data[,"ML_Example_EffectDuration"]),
                                         GlobalVars)
 
 
@@ -34,4 +33,21 @@ if(number_TEs != data[row,"ML_Example_EffectDuration"]){
   stop("the modelled treatment effect duration does not match the number of years the treatment effect is applied for in the model")
 }
 rm(A1c)
+}
+
+##Loop over all PSA parameters and the deterministic model run
+for(row in 1:length(data[,"ML_Example_BMI"])){
+  BMI <- initialise_intervention_dt_BMI(1,
+                                          "MLexample",
+                                          data[row,],
+                                          max(data[,"ML_Example_EffectDuration"]),
+                                          GlobalVars)
+  
+  
+  ##count the treatment effects and make sure that there are as many as the treatment effect duration
+  number_TEs <- sum(ifelse((BMI %in% data[row,"ML_Example_BMI"])==T,1,0))
+  if(number_TEs != data[row,"ML_Example_EffectDuration"]){
+    stop("the modelled treatment effect duration does not match the number of years the treatment effect is applied for in the model")
+  }
+  rm(BMI)
 }
