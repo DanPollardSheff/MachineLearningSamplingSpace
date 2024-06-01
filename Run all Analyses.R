@@ -42,7 +42,7 @@ random_numbers <- generate_random(length(population_clean[,"ID"]))
 set.seed(1)
 start.time <- Sys.time()
 
-results1 <- run_model(population_clean, 
+results1det <- run_model(population_clean, 
                             data, 
                             50, 
                             "MLexample", 
@@ -52,9 +52,9 @@ results1 <- run_model(population_clean,
 end.time <- Sys.time()
 end.time - start.time
 
-write.csv(results1, "Results/MachineLearningExampleIntervention.csv")
+write.csv(results1det, "Results/MachineLearningExampleInterventiondet.csv")
 set.seed(1)
-results2 <- run_model(population_clean, 
+results2det <- run_model(population_clean, 
                       data, 
                       50, 
                       "baseline", 
@@ -62,4 +62,31 @@ results2 <- run_model(population_clean,
                       random_numbers,
                       LifeTables)
 
-write.csv(results2, "Results/MachineLearningNoIntervention.csv")
+write.csv(results2det, "Results/MachineLearningNoInterventiondet.csv")
+
+##PSA
+GlobalVars["run_psa","Value"] <- TRUE
+set.seed(1)
+start.time <- Sys.time()
+
+results1psa <- run_model(population_clean, 
+                         data, 
+                         50, 
+                         "MLexample", 
+                         GlobalVars,
+                         random_numbers,
+                         LifeTables)
+end.time <- Sys.time()
+end.time - start.time
+
+write.csv(results1psa, "Results/MachineLearningExampleInterventionPSA.csv")
+set.seed(1)
+results2psa <- run_model(population_clean, 
+                         data, 
+                         50, 
+                         "baseline", 
+                         GlobalVars,
+                         random_numbers,
+                         LifeTables)
+
+write.csv(results2psa, "Results/MachineLearningNoInterventionPSA.csv")
