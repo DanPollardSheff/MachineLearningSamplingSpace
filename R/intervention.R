@@ -78,10 +78,6 @@ initialise_intervention_dt_BMI <- function(n_,
 ##'@param parameter_ is the row of the parameter matrix
 ##'@param endtime_ is a number indicating how many years the simulation is being run for
 ##'@param GlobalVars_
-##'@param attend_se_ is three column matrix. Column 1 is patient ID, column 2 is 
-##'a 0,1 vector with 1 indicating attendance at an SE course in the first model year,
-##'column 3 is a 0,1 vector with 1 indicating attendance at an SE course in the second
-##'model year 
 ##'@return INTE_SBP is a matrix that gives the reduction in SBP(mmHg) for each patient 
 ##'in each year
 
@@ -89,178 +85,13 @@ initialise_intervention_dt_SBP <- function(n_,
                                            treatment_, 
                                            parameter_,
                                            endtime_,
-                                           GlobalVars_, 
-                                           attend_se_) {
+                                           GlobalVars_) {
   INTE_SBP <- matrix(data=0, nrow = n_, ncol =endtime_+2)
   INTE_SBP[,1] <- 1:n_ #make the first column equivalent to the patient ID for matching later on
   if(treatment_ == "test" | treatment_ == "Mt_HOOD_2018_QOL_SBP"){
     INTE_SBP[,2:(endtime_+2)] <- -10
-  }else if (treatment_ == "Embedding_TrialEffect_All"){
-    INTE_SBP[,2] <- parameter_[,"Intv_Embedding_SBP"]
-    
-    ####Duration scenarios
-    if(as.numeric(GlobalVars_["Treatment effect duration","Value"])==3){#effects last until year 3
-      INTE_SBP[,3:4]  <- parameter_[,"Intv_Embedding_SBP"]
-    }else if (as.numeric(GlobalVars_["Treatment effect duration","Value"])==5){#effects last until year 5
-      INTE_SBP[,3:6]  <- parameter_[,"Intv_Embedding_SBP"]
-    }else{#effects last 10 years
-      INTE_SBP[,3:11]  <- parameter_[,"Intv_Embedding_SBP"] 
-    }
-  }
-  else if (treatment_ == "Embedding_TrialEffect_All_1yr"){
-    INTE_SBP[,2] <- parameter_[,"Intv_Embedding_SBP"]
-    
-    ####Duration scenarios
-    if(as.numeric(GlobalVars_["Treatment effect duration","Value"])==10){#effects last until year 10
-      INTE_SBP[,3:11]  <- parameter_[,"Intv_Embedding_SBP"]
-    } else if (as.numeric(GlobalVars_["Treatment effect duration","Value"])==5){#effects last unitl year 5
-      INTE_SBP[,3:6]  <- parameter_[,"Intv_Embedding_SBP"]
-    }else{#effects last 3 years
-      INTE_SBP[,3:4]  <- parameter_[,"Intv_Embedding_SBP"] 
-    }
-    
-  }else if (treatment_ == "Embedding_MetaAnalysis_All" | 
-            treatment_ == "Control_MetaAnalysis_all" |
-            treatment_ == "Embedding_MetaAnalysis_1yr"){
-    
-    ####Duration scenarios
-    if(as.numeric(GlobalVars_["Treatment effect duration","Value"])==101){
-      #Lifetime Effect
-      INTE_SBP[,2:(endtime_+2)]  <- ifelse(attend_se_[,2]==1,
-                                 parameter_[,"Intv_MA_SBP"],
-                                 0) 
-      INTE_SBP[,3:(endtime_+2)]  <- ifelse(attend_se_[,3]==1,
-                                 parameter_[,"Intv_MA_SBP"],
-                                 INTE_SBP[,2:(endtime_+2)]) 
-      
-    } else if (as.numeric(GlobalVars_["Treatment effect duration","Value"])==15){
-      #10 years of full effect followed by 5 year waning
-      #Create a matrix to store the effects
-      SBP <- matrix(data=0, nrow = 1, ncol = 15)
-      #Trajectory for people who se in year 1
-      SBP[1:10]  <- parameter_[,"Intv_MA_SBP"]
-      
-      SBP[11] <- parameter_[,"Intv_MA_SBP"] - (1*parameter_[,"Intv_MA_SBP"]/5)
-      
-      SBP[12] <- parameter_[,"Intv_MA_SBP"] - (2*parameter_[,"Intv_MA_SBP"]/5)
-      
-      SBP[13] <- parameter_[,"Intv_MA_SBP"] - (3*parameter_[,"Intv_MA_SBP"]/5)
-      
-      SBP[14] <- parameter_[,"Intv_MA_SBP"] - (4*parameter_[,"Intv_MA_SBP"]/5)
-      
-      #Year 1 effect for people who went to an SME course in year 1
-      INTE_SBP[,2] <- ifelse(attend_se_[,2]==1, SBP[1],0)
-      #Year 2 effect for people who went to an SME course in year 1
-      #Year 1 effect for people who went to an SME course in year 2
-      INTE_SBP[,3] <- ifelse(attend_se_[,2]==1, SBP[2],0)
-      INTE_SBP[,3] <- ifelse(attend_se_[,3]==1, SBP[1],INTE_SBP[,3])
-      #Year 3 effect for people who went to an SME course in year 1
-      #Year 2 effect for people who went to an SME course in year 2
-      INTE_SBP[,4] <- ifelse(attend_se_[,2]==1, SBP[3],0)
-      INTE_SBP[,4] <- ifelse(attend_se_[,3]==1, SBP[2],INTE_SBP[,4])
-      #Year 4 effect for people who went to an SME course in year 1
-      #Year 3 effect for people who went to an SME course in year 2
-      INTE_SBP[,5] <- ifelse(attend_se_[,2]==1, SBP[4],0)
-      INTE_SBP[,5] <- ifelse(attend_se_[,3]==1, SBP[3],INTE_SBP[,5])
-      #Year 5 effect for people who went to an SME course in year 1
-      #Year 4 effect for people who went to an SME course in year 2
-      INTE_SBP[,6] <- ifelse(attend_se_[,2]==1, SBP[5],0)
-      INTE_SBP[,6] <- ifelse(attend_se_[,3]==1, SBP[4],INTE_SBP[,6])
-      #Year 6 effect for people who went to an SME course in year 1
-      #Year 5 effect for people who went to an SME course in year 2
-      INTE_SBP[,7] <- ifelse(attend_se_[,2]==1, SBP[6],0)
-      INTE_SBP[,7] <- ifelse(attend_se_[,3]==1, SBP[5],INTE_SBP[,7])
-      #Year 7 effect for people who went to an SME course in year 1
-      #Year 6 effect for people who went to an SME course in year 2
-      INTE_SBP[,8] <- ifelse(attend_se_[,2]==1, SBP[7],0)
-      INTE_SBP[,8] <- ifelse(attend_se_[,3]==1, SBP[6],INTE_SBP[,8])
-      #Year 8 effect for people who went to an SME course in year 1
-      #Year 7 effect for people who went to an SME course in year 2
-      INTE_SBP[,9] <- ifelse(attend_se_[,2]==1, SBP[8],0)
-      INTE_SBP[,9] <- ifelse(attend_se_[,3]==1, SBP[7],INTE_SBP[,9])
-      #Year 9 effect for people who went to an SME course in year 1
-      #Year 8 effect for people who went to an SME course in year 2
-      INTE_SBP[,10] <- ifelse(attend_se_[,2]==1, SBP[9],0)
-      INTE_SBP[,10] <- ifelse(attend_se_[,3]==1, SBP[8],INTE_SBP[,10])
-      #Year 10 effect for people who went to an SME course in year 1
-      #Year 9 effect for people who went to an SME course in year 2
-      INTE_SBP[,11] <- ifelse(attend_se_[,2]==1, SBP[10],0)
-      INTE_SBP[,11] <- ifelse(attend_se_[,3]==1, SBP[9],INTE_SBP[,11])
-      #Year 11 effect for people who went to an SME course in year 1
-      #Year 10 effect for people who went to an SME course in year 2
-      INTE_SBP[,12] <- ifelse(attend_se_[,2]==1, SBP[11],0)
-      INTE_SBP[,12] <- ifelse(attend_se_[,3]==1, SBP[10],INTE_SBP[,12])
-      #Year 12 effect for people who went to an SME course in year 1
-      #Year 11 effect for people who went to an SME course in year 2
-      INTE_SBP[,13] <- ifelse(attend_se_[,2]==1, SBP[12],0)
-      INTE_SBP[,13] <- ifelse(attend_se_[,3]==1, SBP[11],INTE_SBP[,13])
-      #Year 13 effect for people who went to an SME course in year 1
-      #Year 12 effect for people who went to an SME course in year 2
-      INTE_SBP[,14] <- ifelse(attend_se_[,2]==1, SBP[13],0)
-      INTE_SBP[,14] <- ifelse(attend_se_[,3]==1, SBP[12],INTE_SBP[,14])
-      #Year 14 effect for people who went to an SME course in year 1
-      #Year 13 effect for people who went to an SME course in year 2
-      INTE_SBP[,15] <- ifelse(attend_se_[,2]==1, SBP[14],0)
-      INTE_SBP[,15] <- ifelse(attend_se_[,3]==1, SBP[13],INTE_SBP[,15])
-      #Year 15 effect for people who went to an SME course in year 1
-      #Year 14 effect for people who went to an SME course in year 2
-      INTE_SBP[,16] <- ifelse(attend_se_[,2]==1, SBP[15],0)
-      INTE_SBP[,16] <- ifelse(attend_se_[,3]==1, SBP[14],INTE_SBP[,16])
-      #Year 14 effect for people who went to an SME course in year 2
-      INTE_SBP[,17] <- ifelse(attend_se_[,3]==1, SBP[15],0)
-    }else{
-      #Create a matrix to store the effects
-      SBP <- matrix(data=0, nrow = 1, ncol = 10)
-      #Trajectory for people who se in year 1
-      SBP[1:6]  <- parameter_[,"Intv_MA_SBP"]
-      
-      SBP[7] <-parameter_[,"Intv_MA_SBP"] - (1*parameter_[,"Intv_MA_SBP"]/4)
-      
-      SBP[8] <-parameter_[,"Intv_MA_SBP"] - (2*parameter_[,"Intv_MA_SBP"]/4)
-      
-      SBP[9] <-parameter_[,"Intv_MA_SBP"] - (3*parameter_[,"Intv_MA_SBP"]/4)
-      
-      #Year 1 effect for people who went to an SME course in year 1
-      INTE_SBP[,2] <- ifelse(attend_se_[,2]==1, SBP[1],0)
-      #Year 2 effect for people who went to an SME course in year 1
-      #Year 1 effect for people who went to an SME course in year 2
-      INTE_SBP[,3] <- ifelse(attend_se_[,2]==1, SBP[2],0)
-      INTE_SBP[,3] <- ifelse(attend_se_[,3]==1, SBP[1],INTE_SBP[,3])
-      #Year 3 effect for people who went to an SME course in year 1
-      #Year 2 effect for people who went to an SME course in year 2
-      INTE_SBP[,4] <- ifelse(attend_se_[,2]==1, SBP[3],0)
-      INTE_SBP[,4] <- ifelse(attend_se_[,3]==1, SBP[2],INTE_SBP[,4])
-      #Year 4 effect for people who went to an SME course in year 1
-      #Year 3 effect for people who went to an SME course in year 2
-      INTE_SBP[,5] <- ifelse(attend_se_[,2]==1, SBP[4],0)
-      INTE_SBP[,5] <- ifelse(attend_se_[,3]==1, SBP[3],INTE_SBP[,5])
-      #Year 5 effect for people who went to an SME course in year 1
-      #Year 4 effect for people who went to an SME course in year 2
-      INTE_SBP[,6] <- ifelse(attend_se_[,2]==1, SBP[5],0)
-      INTE_SBP[,6] <- ifelse(attend_se_[,3]==1, SBP[4],INTE_SBP[,6])
-      #Year 6 effect for people who went to an SME course in year 1
-      #Year 5 effect for people who went to an SME course in year 2
-      INTE_SBP[,7] <- ifelse(attend_se_[,2]==1, SBP[6],0)
-      INTE_SBP[,7] <- ifelse(attend_se_[,3]==1, SBP[5],INTE_SBP[,7])
-      #Year 7 effect for people who went to an SME course in year 1
-      #Year 6 effect for people who went to an SME course in year 2
-      INTE_SBP[,8] <- ifelse(attend_se_[,2]==1, SBP[7],0)
-      INTE_SBP[,8] <- ifelse(attend_se_[,3]==1, SBP[6],INTE_SBP[,8])
-      #Year 8 effect for people who went to an SME course in year 1
-      #Year 7 effect for people who went to an SME course in year 2
-      INTE_SBP[,9] <- ifelse(attend_se_[,2]==1, SBP[8],0)
-      INTE_SBP[,9] <- ifelse(attend_se_[,3]==1, SBP[7],INTE_SBP[,9])
-      #Year 9 effect for people who went to an SME course in year 1
-      #Year 8 effect for people who went to an SME course in year 2
-      INTE_SBP[,10] <- ifelse(attend_se_[,2]==1, SBP[9],0)
-      INTE_SBP[,10] <- ifelse(attend_se_[,3]==1, SBP[8],INTE_SBP[,10])
-      #Year 10 effect for people who went to an SME course in year 1
-      #Year 9 effect for people who went to an SME course in year 2
-      INTE_SBP[,11] <- ifelse(attend_se_[,2]==1, SBP[10],0)
-      INTE_SBP[,11] <- ifelse(attend_se_[,3]==1, SBP[9],INTE_SBP[,11])
-      #Year 10 effect for people who went to an SME course in year 2
-      INTE_SBP[,12] <- ifelse(attend_se_[,3]==1, SBP[10],0)
-    }
+  }else if(treatment_ == "MLexample"){
+    INTE_SBP[2:(parameter_[,"ML_Example_EffectDuration"]+1)] <- parameter_[,"ML_Example_SBP"]
   }else{
     #If no option is specified, set treatment effects to 0
     INTE_SBP[,2:(endtime_+2)] <-0 
