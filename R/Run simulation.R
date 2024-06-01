@@ -52,12 +52,11 @@ run_simulation <- function(population_, parameters_, endtime_, treatment_, Globa
   HAEM_underlying   <- UKPDS_90_HAEM(population_,parameters_,endtime_)
   
   #Place to add Intervention effects
-  attend_se         <- initialise_intervention_dt_attendse(length(population_[,"ID"]), treatment_, parameters_)
-  HBA1c_INTV        <- initialise_intervention_dt_HbA1c(length(population_[,"ID"]),treatment_,parameters_,endtime_,GlobalVars_,attend_se)
-  BMI_INTV          <- initialise_intervention_dt_BMI(length(population_[,"ID"]),treatment_,parameters_,endtime_,GlobalVars_,attend_se)
-  SBP_INTV          <- initialise_intervention_dt_SBP(length(population_[,"ID"]),treatment_,parameters_,endtime_,GlobalVars_,attend_se)
-  HDL_INTV          <- initialise_intervention_dt_HDL(length(population_[,"ID"]),treatment_,parameters_,endtime_,GlobalVars_,attend_se)
-  LDL_INTV          <- initialise_intervention_dt_LDL(length(population_[,"ID"]),treatment_,parameters_,endtime_,GlobalVars_,attend_se)
+  HBA1c_INTV        <- initialise_intervention_dt_HbA1c(length(population_[,"ID"]),treatment_,parameters_,endtime_,GlobalVars_)
+  BMI_INTV          <- initialise_intervention_dt_BMI(length(population_[,"ID"]),treatment_,parameters_,endtime_,GlobalVars_)
+  SBP_INTV          <- initialise_intervention_dt_SBP(length(population_[,"ID"]),treatment_,parameters_,endtime_,GlobalVars_)
+  HDL_INTV          <- initialise_intervention_dt_HDL(length(population_[,"ID"]),treatment_,parameters_,endtime_,GlobalVars_)
+  LDL_INTV          <- initialise_intervention_dt_LDL(length(population_[,"ID"]),treatment_,parameters_,endtime_,GlobalVars_)
   
   
   
@@ -126,7 +125,7 @@ run_simulation <- function(population_, parameters_, endtime_, treatment_, Globa
   ##QALYs
   population_ <- calculate_QALYs(population_, parameters_,  year, alive, GlobalVars_)
   ##Costs
-  population_ <- calculate_costs(population_, parameters_, year, alive, GlobalVars_,treatment_,attend_se)
+  population_ <- calculate_costs(population_, parameters_, year, alive, GlobalVars_,treatment_)
   
   #Record results
   results <- GenerateDetailedresults(results,population_, year, alive, GlobalVars_)

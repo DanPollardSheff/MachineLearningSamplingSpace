@@ -40,7 +40,7 @@ initialise_intervention_dt_HbA1c <- function(n_,
   if(treatment_ == "test" | treatment_ == "Mt_HOOD_2018_QOL_A1c"){
     INTE_A1c[,2:(endtime_+2)] <- -0.5
   }else if(treatment_ == "MLexample"){
-    INTE_A1c[2:(parameter_[,"ML_Example_EffectDuration"]+1)] <- parameter_[,"ML_Example_HbA1c"]
+    INTE_A1c[,2:(parameter_[,"ML_Example_EffectDuration"]+1)] <- parameter_[,"ML_Example_HbA1c"]
   }else{ #if no treatment option is selected, leave them at baseline values
     INTE_A1c[,2:(endtime_+2)] <- 0
   }
@@ -66,7 +66,7 @@ initialise_intervention_dt_BMI <- function(n_,
   if(treatment_ == "test"|treatment_ == "Mt_HOOD_2018_QOL_BMI"){
     INTE_BMI[,2:(endtime_+2)] <- -1
   }else if(treatment_ == "MLexample"){
-    INTE_BMI[2:(parameter_[,"ML_Example_EffectDuration"]+1)] <- parameter_[,"ML_Example_BMI"]
+    INTE_BMI[,2:(parameter_[,"ML_Example_EffectDuration"]+1)] <- parameter_[,"ML_Example_BMI"]
   }
   
   
@@ -91,7 +91,7 @@ initialise_intervention_dt_SBP <- function(n_,
   if(treatment_ == "test" | treatment_ == "Mt_HOOD_2018_QOL_SBP"){
     INTE_SBP[,2:(endtime_+2)] <- -10
   }else if(treatment_ == "MLexample"){
-    INTE_SBP[2:(parameter_[,"ML_Example_EffectDuration"]+1)] <- parameter_[,"ML_Example_SBP"]
+    INTE_SBP[,2:(parameter_[,"ML_Example_EffectDuration"]+1)] <- parameter_[,"ML_Example_SBP"]
   }else{
     #If no option is specified, set treatment effects to 0
     INTE_SBP[,2:(endtime_+2)] <-0 
@@ -119,7 +119,7 @@ initialise_intervention_dt_HDL <- function(n_,
   if(treatment_ == "Mt_HOOD_2018_QOL_ALL" | treatment_ == "Mt_HOOD_2018_QOL_HDL"){
     INTE_HDL[,2:(endtime_+2)] <- -0.5
   }else if(treatment_ == "MLexample"){
-    INTE_HDL[2:(parameter_[,"ML_Example_EffectDuration"]+1)] <- parameter_[,"ML_Example_HDL"]
+    INTE_HDL[,2:(parameter_[,"ML_Example_EffectDuration"]+1)] <- parameter_[,"ML_Example_HDL"]
   }
   
   return(INTE_HDL)
@@ -144,7 +144,7 @@ initialise_intervention_dt_LDL <- function(n_,
   if(treatment_ == "Mt_HOOD_2018_QOL_ALL" | treatment_ == "Mt_HOOD_2018_QOL_LDL"){
     INTE_LDL[,2:(endtime_+2)] <- -0.5
   }else if(treatment_ == "MLexample"){
-    INTE_LDL[2:(parameter_[,"ML_Example_EffectDuration"]+1)] <- parameter_[,"ML_Example_LDL"]
+    INTE_LDL[,2:(parameter_[,"ML_Example_EffectDuration"]+1)] <- parameter_[,"ML_Example_LDL"]
   }
   return(INTE_LDL)
 }

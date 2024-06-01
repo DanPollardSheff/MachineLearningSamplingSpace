@@ -25,11 +25,10 @@
 ##'@param alive_ is a vector of TRUES and FLASES to indicate that a patient is alive or not
 ##'@param GlobalVars_ is the global variables matrix
 ##'@param treatment_ is a text string indicating the treatment
-##'@param attend_se_ is a matrix indicating whether a person had  
 ##'@return population_ returns the population matrix
 
 
-calculate_costs <- function(population_, parameters_, year_, alive_, GlobalVars_,treatment_,attend_se_) {
+calculate_costs <- function(population_, parameters_, year_, alive_, GlobalVars_,treatment_) {
   
   population_[,"DMCOST"][alive_] <- population_[,"MET"][alive_]*parameters_[,"COST_MET"] + 
     population_[,"MET2"][alive_] * parameters_[,"COST_MET2"] + 
@@ -113,14 +112,6 @@ population_[, "YearCOST"][alive_] <-population_[, "DMCOST"][alive_]+
   population_[, "RETCOST"][alive_]+population_[, "NEUCOST"][alive_]+
   population_[, "CANCOST"][alive_]+population_[, "OSTCOST"][alive_]+
   population_[, "DEPCOST"][alive_]+population_[, "OTHCOST"][alive_]
-
-##Add in intervention costs, Embedder costs + any SE courses attended
-population_ <- Intervention_costs_Embedding(treatment_,
-                                                    parameters_,
-                                                    population_,
-                                                    attend_se_,
-                                                    year_,
-                                                    alive_)
 
 #store cumulative costs
 population_[, "COST"][alive_] <- population_[, "COST"][alive_]+
