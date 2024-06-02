@@ -79,7 +79,7 @@ run_model <- function(population_,
     stopCluster(cl)
     
     if(GlobalVars["Results_output", "Value"] == "Summary"){
-      modelresults <- matrix(unlist(modelresults), ncol=24, byrow=T)
+      modelresults <- matrix(unlist(modelresults), ncol=25, byrow=T)
     colnames(modelresults) <- c("Life Years", 
                                 "Discounted Life Years",
                                 "QALYs", 
@@ -103,7 +103,8 @@ run_model <- function(population_,
                                 "10 year breast cancer",
                                 "10 year colorectal cancer",
                                 "10 year depression",
-                                "10 year oestoarthritis")
+                                "10 year oestoarthritis",
+                                "SOUR")
     }
   }
   return(modelresults)
