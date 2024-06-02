@@ -180,7 +180,7 @@ run_simulation <- function(population_, parameters_, endtime_, treatment_, Globa
   #For now return the Detailed results table or the population matrix if the run is deterministic
   if(GlobalVars_["Results_output", "Value"] == "Summary"&
      GlobalVars_["run_psa", "Value"]==T){
-    psaresults <- matrix(data=NA,nrow=1,ncol=24)
+    psaresults <- matrix(data=NA,nrow=1,ncol=25)
     #Life Years
     psaresults[,1] <- sum(results["Undiscounted life years accrued",],na.rm=TRUE)/length(population_[,"ID"])
     psaresults[,2] <- sum(results["Discounted life years accrued",],na.rm=TRUE)/length(population_[,"ID"])
@@ -207,6 +207,8 @@ run_simulation <- function(population_, parameters_, endtime_, treatment_, Globa
     psaresults[,22] <- results["Colorectal Cancer Hist",11]
     psaresults[,23] <- results["Depression Hist",11]
     psaresults[,24] <- results["Osteoarthritis Hist",11]
+    ##Store the parameter set used
+    psaresults[,25] <- SOUR_
     #delete the original results matrix
     rm(results)
     return(psaresults)
