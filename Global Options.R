@@ -22,7 +22,7 @@
 #List of the global variables
 glo_vars <- c("n","run_psa","psa_count", "disc_rate_costs", "disc_rate_QALYs", "disc_rate_LYs",
               "Population", "treatment", "Results_output", "KMmethod", "Number of cores",
-              "Treatment effect duration")
+              "Treatment effect duration","Trajectory Source")
 
 ##get the length of glo_vars, for checking below
 length(glo_vars)
@@ -86,3 +86,7 @@ GlobalVars["Number of cores", "Description"] <- "Number to declare the maximum n
 
 GlobalVars["Treatment effect duration", "Value"] <- 3
 GlobalVars["Treatment effect duration", "Description"] <- "Number to declare how long the intervention effect will last."
+
+GlobalVars["Trajectory Source", "Value"] <- "Constant"
+GlobalVars["Trajectory Source", "Description"] <- "Option to control the source of the trajectories. Default is UKPDS90 risk factor trajectories. Other options include
+Constant"

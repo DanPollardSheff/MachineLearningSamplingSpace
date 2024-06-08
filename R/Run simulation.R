@@ -42,14 +42,14 @@ run_simulation <- function(population_, parameters_, endtime_, treatment_, Globa
     parameters_ <- parameters_[SOUR_+1,]
   }
   ##Create the underlying UKPDS trajectory matrices
-  HBA1c_underlying  <- UKPDS_90_contrisk_A1c(population_,parameters_,endtime_)
-  BMI_underlying    <- UKPDS_90_contrisk_BMI(population_,parameters_,endtime_)
-  SBP_underlying    <- UKPDS_90_contrisk_SBP(population_,parameters_,endtime_)
-  HDL_underlying    <- UKPDS_90_contrisk_HDL(population_,parameters_,endtime_)
-  LDL_underlying    <- UKPDS_90_contrisk_LDL(population_,parameters_,endtime_)
-  HEARTR_underlying <- UKPDS_90_HEARTR(population_,parameters_,endtime_)
-  WBC_underlying    <- UKPDS_90_WBC(population_,parameters_,endtime_)
-  HAEM_underlying   <- UKPDS_90_HAEM(population_,parameters_,endtime_)
+  HBA1c_underlying  <- Select_trajectory_A1c(population_,parameters_,endtime_,GlobalVars)
+  BMI_underlying    <- Select_trajectory_BMI(population_,parameters_,endtime_,GlobalVars)
+  SBP_underlying    <- Select_trajectory_SBP(population_,parameters_,endtime_,GlobalVars)
+  HDL_underlying    <- Select_trajectory_HDL(population_,parameters_,endtime_,GlobalVars)
+  LDL_underlying    <- Select_trajectory_LDL(population_,parameters_,endtime_,GlobalVars)
+  HEARTR_underlying <- Select_trajectory_HEARTR(population_,parameters_,endtime_,GlobalVars)
+  WBC_underlying    <- Select_trajectory_WBC(population_,parameters_,endtime_,GlobalVars)
+  HAEM_underlying   <- Select_trajectory_HAEM(population_,parameters_,endtime_,GlobalVars)
   
   #Place to add Intervention effects
   HBA1c_INTV        <- initialise_intervention_dt_HbA1c(length(population_[,"ID"]),treatment_,parameters_,endtime_,GlobalVars_)

@@ -29,7 +29,7 @@
 ####'that can easily be matched to the population matrix
 ####'draw for each patient in each year for every event in which a random number 
 ####'is required 
-####'@param SOUR_ is the number of the second order uncetainy run (PSA run)
+####'@param SOUR_ is the number of the second order uncertainty run (PSA run)
 ####'@return results, is the results matrix
 run_model <- function(population_, 
                       parameters_, 
