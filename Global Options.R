@@ -36,7 +36,7 @@ colnames(GlobalVars) <- c("Value", "Description")
 #drop the glo_vars variable
 rm(glo_vars)
 
-GlobalVars["n", "Value"] <- 5000
+GlobalVars["n", "Value"] <- 10000
 GlobalVars["n", "Description"] <- "The number of patients to run through the model"
 
 GlobalVars["run_psa", "Value"] <- F

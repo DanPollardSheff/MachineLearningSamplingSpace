@@ -24,6 +24,13 @@ sapply(list.files("R",full.names=T), source)
 
 #Load parameters
 load("data/parameter.rda")
+load("data/parameter2.rda")
+load("data/parameter3.rda")
+load("data/parameter4.rda")
+load("data/parameter5.rda")
+
+
+
 #Load population variables
 PopulationVariables <- read.csv("data/PopulationVariables.csv")
 #Load life tables

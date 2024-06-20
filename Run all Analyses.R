@@ -33,7 +33,7 @@ source("all_model_files.R")
 
 
 ####build the population
-population <-read.csv("Populations/POPULATION.csv")
+population <-read.csv("Populations/ADVANCE - MTHood2018 - F.csv")
 population_clean <- build_population(population, PopulationVariables, GlobalVars)
 #Generate an array of common random numbers for each patient for each event for each year
 random_numbers <- generate_random(length(population_clean[,"ID"])) 
@@ -44,7 +44,7 @@ start.time <- Sys.time()
 
 results1det <- run_model(population_clean, 
                             data, 
-                            50, 
+                            20, 
                             "MLexample", 
                             GlobalVars,
                             random_numbers,
@@ -56,7 +56,7 @@ write.csv(results1det, "Results/MachineLearningExampleInterventiondet.csv")
 set.seed(1)
 results2det <- run_model(population_clean, 
                       data, 
-                      50, 
+                      20, 
                       "baseline", 
                       GlobalVars,
                       random_numbers,
@@ -69,9 +69,9 @@ GlobalVars["run_psa","Value"] <- TRUE
 set.seed(1)
 start.time <- Sys.time()
 
-results1psa <- run_model(population_clean, 
+results_intv_psa <- run_model(population_clean, 
                          data, 
-                         50, 
+                         20, 
                          "MLexample", 
                          GlobalVars,
                          random_numbers,
@@ -79,14 +79,137 @@ results1psa <- run_model(population_clean,
 end.time <- Sys.time()
 end.time - start.time
 
-write.csv(results1psa, "Results/MachineLearningExampleInterventionPSA.csv")
+write.csv(results_intv_psa, "Results/MachineLearningExampleInterventionPSA.csv")
+rm(results_intv_psa)
+
 set.seed(1)
-results2psa <- run_model(population_clean, 
+results_nointv_psa <- run_model(population_clean, 
                          data, 
-                         50, 
+                         20, 
                          "baseline", 
                          GlobalVars,
                          random_numbers,
                          LifeTables)
 
-write.csv(results2psa, "Results/MachineLearningNoInterventionPSA.csv")
+write.csv(results_nointv_psa, "Results/MachineLearningNoInterventionPSA.csv")
+rm(results_nointv_psa)
+
+##2nd set of PSAs
+
+set.seed(1)
+start.time <- Sys.time()
+
+results_intv_psa2 <- run_model(population_clean, 
+                              data2, 
+                              20, 
+                              "MLexample", 
+                              GlobalVars,
+                              random_numbers,
+                              LifeTables)
+end.time <- Sys.time()
+end.time - start.time
+
+write.csv(results_intv_psa2, "Results/MachineLearningExampleInterventionPSA2.csv")
+rm(results_intv_psa2)
+
+set.seed(1)
+results_nointv_psa2 <- run_model(population_clean, 
+                                data2, 
+                                20, 
+                                "baseline", 
+                                GlobalVars,
+                                random_numbers,
+                                LifeTables)
+
+write.csv(results_nointv_psa2, "Results/MachineLearningNoInterventionPSA2.csv")
+rm(results_nointv_psa2)
+
+##3rd set of PSAs
+
+set.seed(1)
+start.time <- Sys.time()
+
+results_intv_psa3 <- run_model(population_clean, 
+                              data3, 
+                              20, 
+                              "MLexample", 
+                              GlobalVars,
+                              random_numbers,
+                              LifeTables)
+end.time <- Sys.time()
+end.time - start.time
+
+write.csv(results_intv_psa3, "Results/MachineLearningExampleInterventionPSA3.csv")
+rm(results_intv_psa3)
+
+set.seed(1)
+results_nointv_psa3 <- run_model(population_clean, 
+                                data3, 
+                                20, 
+                                "baseline", 
+                                GlobalVars,
+                                random_numbers,
+                                LifeTables)
+
+write.csv(results_nointv_psa3, "Results/MachineLearningNoInterventionPSA3.csv")
+rm(results_nointv_psa3)
+
+##4th set of PSAs
+
+set.seed(1)
+start.time <- Sys.time()
+
+results_intv_psa4 <- run_model(population_clean, 
+                              data4, 
+                              20, 
+                              "MLexample", 
+                              GlobalVars,
+                              random_numbers,
+                              LifeTables)
+end.time <- Sys.time()
+end.time - start.time
+
+write.csv(results_intv_psa4, "Results/MachineLearningExampleInterventionPSA4.csv")
+rm(results_intv_psa4)
+
+set.seed(1)
+results_nointv_psa4 <- run_model(population_clean, 
+                                data4, 
+                                20, 
+                                "baseline", 
+                                GlobalVars,
+                                random_numbers,
+                                LifeTables)
+
+write.csv(results_nointv_psa4, "Results/MachineLearningNoInterventionPSA4.csv")
+rm(results_nointv_psa4)
+
+##5th set of PSAs
+
+set.seed(1)
+start.time <- Sys.time()
+
+results_intv_psa5 <- run_model(population_clean, 
+                              data5, 
+                              20, 
+                              "MLexample", 
+                              GlobalVars,
+                              random_numbers,
+                              LifeTables)
+end.time <- Sys.time()
+end.time - start.time
+
+write.csv(results_intv_psa5, "Results/MachineLearningExampleInterventionPSA5.csv")
+rm(results_intv_psa5)
+
+set.seed(1)
+results_nointv_psa5 <- run_model(population_clean, 
+                                data5, 
+                                20, 
+                                "baseline", 
+                                GlobalVars,
+                                random_numbers,
+                                LifeTables)
+
+write.csv(results_nointv_psa5, "Results/MachineLearningNoInterventionPSA5.csv")
+rm(results_nointv_psa5)
