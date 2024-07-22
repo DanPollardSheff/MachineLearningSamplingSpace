@@ -90,8 +90,6 @@ run_simulation <- function(population_, parameters_, endtime_, treatment_, Globa
   population_ <- update_events_SPHR_depression(population_,parameters_,year,alive,random_numbs_)
   #Estimate Osteoarthritis
   population_ <- update_events_SPHR_osteoarthritis(population_,parameters_,year,alive,random_numbs_)
-  #Estimate Cancer incidence
-  population_ <- update_events_SPHR_cancer(population_, parameters_,year, alive,random_numbs_)
   
   #Stop the model if dead people have events
   if(sum(population_[,"MI_E"][dead])  !=0|
