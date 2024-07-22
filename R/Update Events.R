@@ -263,40 +263,6 @@ update_events_SPHR_osteoarthritis <- function(population_,
 }
 
 ##'@param population_ is the population matrix
-##'@param parameter_ is a row of the paramters matrix
-##'@param alive_ is a vector of TRUE and FALSES indicating whether a patient 
-##'is alive or not
-##'@param random_numbs_ is the array of common random numbers
-##'@param Year_ is the current simulation year
-##'@return popoulation is the population matrix
-
-update_events_SPHR_cancer <- function(population_, parameter_,Year_, alive_, random_numbs_){
-  #Estimate the probability of developing breast cancer this year
-  pBC <- Breast_cancer(population_, parameter_, alive_)
-  #Reset this probability to 0 for people with a history of breast cancer
-  pBC <- ifelse(population_[,"CANB_H"][alive_]==1,0,pBC)
-  #record probability of breast cancer
-  population_[,"p_BC"][alive_] <- pBC
-  #Update breast cancer events
-  population_[,"CANB_E"][alive_] <- ifelse(random_numbs_[,"CANB",Year_+1][alive_]<pBC,1,0)
-  
-  #Estimate the probability of developing colorectal cancer this year
-  pCC <- Colorectal_cancer(population_, parameter_, alive_)
-  #Reset this probability to 0 for people with a history of breast cancer
-  pCC <- ifelse(population_[,"CANC_H"][alive_]==1,0,pCC)
-  #record probability of breast cancer
-  population_[,"p_CC"][alive_] <- pCC
-  #Update breast cancer events
-  population_[,"CANC_E"][alive_] <- ifelse(random_numbs_[,"CANC",Year_+1][alive_]<pCC,1,0)
-  
-  #remove temporary variables
-  rm(pCC,pBC)
-  
-  #return the population matrix
-  return(population_)
-}
-
-##'@param population_ is the population matrix
 ##'@param parameter_ is a row of the parameters matrix
 ##'@param alive_ is a vector of TRUE and FALSES indicating whether a patient 
 ##'is alive or not
