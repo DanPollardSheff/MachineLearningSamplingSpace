@@ -83,6 +83,7 @@ write.csv(results_intv_psa, "Results/MachineLearningExampleInterventionPSA.csv")
 rm(results_intv_psa)
 
 set.seed(1)
+start.time <- Sys.time()
 results_nointv_psa <- run_model(population_clean, 
                          data, 
                          20, 
@@ -90,6 +91,9 @@ results_nointv_psa <- run_model(population_clean,
                          GlobalVars,
                          random_numbers,
                          LifeTables)
+
+end.time <- Sys.time()
+end.time - start.time
 
 write.csv(results_nointv_psa, "Results/MachineLearningNoInterventionPSA.csv")
 rm(results_nointv_psa)
@@ -113,6 +117,8 @@ write.csv(results_intv_psa2, "Results/MachineLearningExampleInterventionPSA2.csv
 rm(results_intv_psa2)
 
 set.seed(1)
+start.time <- Sys.time()
+
 results_nointv_psa2 <- run_model(population_clean, 
                                 data2, 
                                 20, 
@@ -120,6 +126,8 @@ results_nointv_psa2 <- run_model(population_clean,
                                 GlobalVars,
                                 random_numbers,
                                 LifeTables)
+end.time <- Sys.time()
+end.time - start.time
 
 write.csv(results_nointv_psa2, "Results/MachineLearningNoInterventionPSA2.csv")
 rm(results_nointv_psa2)
@@ -143,6 +151,7 @@ write.csv(results_intv_psa3, "Results/MachineLearningExampleInterventionPSA3.csv
 rm(results_intv_psa3)
 
 set.seed(1)
+start.time <- Sys.time()
 results_nointv_psa3 <- run_model(population_clean, 
                                 data3, 
                                 20, 
@@ -150,7 +159,8 @@ results_nointv_psa3 <- run_model(population_clean,
                                 GlobalVars,
                                 random_numbers,
                                 LifeTables)
-
+end.time <- Sys.time()
+end.time - start.time
 write.csv(results_nointv_psa3, "Results/MachineLearningNoInterventionPSA3.csv")
 rm(results_nointv_psa3)
 
@@ -173,6 +183,8 @@ write.csv(results_intv_psa4, "Results/MachineLearningExampleInterventionPSA4.csv
 rm(results_intv_psa4)
 
 set.seed(1)
+start.time <- Sys.time()
+
 results_nointv_psa4 <- run_model(population_clean, 
                                 data4, 
                                 20, 
@@ -180,7 +192,8 @@ results_nointv_psa4 <- run_model(population_clean,
                                 GlobalVars,
                                 random_numbers,
                                 LifeTables)
-
+end.time <- Sys.time()
+end.time - start.time
 write.csv(results_nointv_psa4, "Results/MachineLearningNoInterventionPSA4.csv")
 rm(results_nointv_psa4)
 
@@ -203,6 +216,8 @@ write.csv(results_intv_psa5, "Results/MachineLearningExampleInterventionPSA5.csv
 rm(results_intv_psa5)
 
 set.seed(1)
+start.time <- Sys.time()
+
 results_nointv_psa5 <- run_model(population_clean, 
                                 data5, 
                                 20, 
@@ -210,6 +225,7 @@ results_nointv_psa5 <- run_model(population_clean,
                                 GlobalVars,
                                 random_numbers,
                                 LifeTables)
-
+end.time <- Sys.time()
+end.time - start.time
 write.csv(results_nointv_psa5, "Results/MachineLearningNoInterventionPSA5.csv")
 rm(results_nointv_psa5)
